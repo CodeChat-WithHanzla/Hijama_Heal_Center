@@ -1,17 +1,24 @@
-import React, { useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../context/AppContext'
+import { useNavigate } from 'react-router-dom'
 
-function TopTherapists() {
-    const navigate = useNavigate()
+function RelatedTherapists({ therapistId, speciality }) {
     const { therapists } = useContext(AppContext)
+    const navigate = useNavigate()
+    const [relatedTherapists, setRelatedTherapists] = useState([])
+    useEffect(() => {
+        if (therapists.length > 0 && speciality) {
+            const therapistsData = therapists.filter((therapist) => therapist.speciality === speciality && therapist._id !== therapistId)
+            setRelatedTherapists(therapistsData)
+        }
+    }, [therapists, therapistId, speciality])
     return (
         <div className='flex flex-col items-center gap-4 my-16 text-gray-900 md:mx-10'>
-            <h1 className='text-3xl font-medium'>Top Therapists to Book</h1>
+            <h1 className='text-3xl font-medium'>Related Therapists to Book</h1>
             <p className='sm:w-1/3 text-center text-sm'>Simply browse through our extensive list of trusted Cupping Therapists</p>
             <div className="w-full grid grid-cols-auto gap-4 pt-5 gap-y-6 px-3 sm:px-0">
                 {
-                    therapists.slice(0, 10).map((item, index) => (
+                    relatedTherapists.slice(0, 5).map((item, index) => (
                         <div onClick={() => { navigate(`/appointments/${item._id}`); scrollTo(0, 0) }} className="border border-blue-200 rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500" key={index}>
                             <img className='bg-blue-50 ' src={item.image} alt="" />
                             <div className="p-4">
@@ -33,4 +40,4 @@ function TopTherapists() {
     )
 }
 
-export default TopTherapists
+export default RelatedTherapists

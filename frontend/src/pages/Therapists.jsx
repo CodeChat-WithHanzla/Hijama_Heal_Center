@@ -5,7 +5,7 @@ function Therapists() {
     const [filterDoc, setFilterDoc] = useState([])
     const { speciality } = useParams()
     const navigate = useNavigate()
-
+    const [showFilter, setShowFilter] = useState(false)
     const { therapists } = useContext(AppContext)
     const applyFilter = () => {
         if (speciality) {
@@ -20,9 +20,10 @@ function Therapists() {
 
     return (
         <div>
-            <p className='text-gray-600'>Browse through the therapists specialist</p>
+            <p className='text-gray-600 mt-5'>Browse through the therapists specialist</p>
             <div className="flex flex-col sm:flex-row items-start gap-5 mt-5">
-                <div className="flex flex-col gap-4 text-sm text-gray-600">
+                <button onClick={() => setShowFilter(prev => !prev)} className={`py-1 px-3 border rounded text-sm transition-all sm:hidden ${showFilter ? 'bg-primary text-white': ''}`}>Filters</button>
+                <div className={`flex-col gap-4 text-sm text-gray-600 ${showFilter ? 'flex' : 'hidden sm:flex'}`}>
                     <p onClick={() => navigate('/therapists')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer whitespace-nowrap ${speciality === undefined ? 'bg-indigo-100 text-black' : ''}`}>All</p>
                     <p onClick={() => speciality === 'MALE CUPPING' ? navigate('/therapists') : navigate(`/therapists/MALE CUPPING`)} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer whitespace-nowrap ${speciality === 'MALE CUPPING' ? 'bg-indigo-100 text-black' : ''}`}>MALE CUPPING</p>
                     <p onClick={() => speciality === 'FEMALE CUPPING' ? navigate('/therapists') : navigate('/therapists/FEMALE CUPPING')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer whitespace-nowrap ${speciality === 'FEMALE CUPPING' ? 'bg-indigo-100 text-black' : ''}`}>FEMALE CUPPING</p>
