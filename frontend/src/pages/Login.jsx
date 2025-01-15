@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-
+import axios from "axios";
+import { useNavigate } from "react-router-dom"
 function Login() {
     const [state, setState] = useState('Sign Up');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
-    const [otpState, setOtpState] = useState(false); // State to toggle OTP component
-    const [otp, setOtp] = useState(''); // State for the entered OTP
-    const [popup, setPopup] = useState({ show: false, message: '', isSuccess: false }); // Pop-up state
-
+    const [phone, setPhone] = useState('')
+    const [otpState, setOtpState] = useState(false);
+    const [otp, setOtp] = useState('');
+    const [popup, setPopup] = useState({ show: false, message: '', isSuccess: false });
+    const navigate = useNavigate()
     const showPopup = (message, isSuccess) => {
         setPopup({ show: true, message, isSuccess });
         setTimeout(() => setPopup({ show: false, message: '', isSuccess: false }), 3000);
@@ -17,21 +19,38 @@ function Login() {
     const onSubmitHandler = async (event) => {
         event.preventDefault();
 
-        if (state === 'Sign Up') {
-            setOtpState(true); // Show OTP component
-        } else {
-            console.log('Login submitted with email:', email);
+        try {
+            if (state === 'Sign Up') {
+                await axios.post(`${import.meta.env.VITE_BASE_URL}/auth/register`, {
+                    name,
+                    email,
+                    phone,
+                    password
+                })
+                setOtpState(true);
+            } else {
+                await axios.post(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
+                    email,
+                    password
+                })
+                navigate('/')
+            }
+        } catch (error) {
+            showPopup('Error Occur Please try again.', false);
         }
     };
 
-    const onVerifyOtpHandler = (event) => {
+    const onVerifyOtpHandler = async (event) => {
         event.preventDefault();
-
-        if (otp === '123456') {
+        try {
+            await axios.post(`${import.meta.env.VITE_BASE_URL}/auth/verifyEmail`, {
+                email,
+                otp
+            })
             showPopup('Email verified successfully!', true);
             setOtpState(false);
             setState('Login');
-        } else {
+        } catch (error) {
             showPopup('Invalid OTP. Please try again.', false);
         }
     };
@@ -79,16 +98,29 @@ function Login() {
                         <p className='text-2xl font-semibold'>{state === 'Sign Up' ? 'Create Account' : 'Login'}</p>
                         <p>Please {state === 'Sign Up' ? 'sign up' : 'login'} to book an appointment</p>
                         {state === 'Sign Up' && (
-                            <div className='w-full'>
-                                <p>Full Name</p>
-                                <input
-                                    required
-                                    className='border outline-blue-600 rounded w-full p-2 mt-1'
-                                    type="text"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                />
-                            </div>
+                            <>
+                                <div className='w-full'>
+                                    <p>Full Name</p>
+                                    <input
+                                        required
+                                        className='border outline-blue-600 rounded w-full p-2 mt-1'
+                                        type="text"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                    />
+                                </div>
+                                <div className='w-full'>
+                                    <p>Phone Number</p>
+                                    <input
+                                        required
+                                        className='border outline-blue-600 rounded w-full p-2 mt-1'
+                                        type="tel"
+                                        value={phone}
+                                        onChange={(e) => setPhone(e.target.value)}
+                                    />
+                                </div>
+                            </>
+
                         )}
                         <div className='w-full'>
                             <p>Email</p>
