@@ -1,2 +1,0 @@
-"Huzaifa",
-  "Sami",
