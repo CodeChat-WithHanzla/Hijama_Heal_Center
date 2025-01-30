@@ -272,7 +272,6 @@ const createPayment = async (req, res) => {
 const webHook = async (req, res) => {
   const { event, data } = req.body;
 
- 
   if (event === "payment.success") {
     console.log("Payment successful", data);
     res.status(200).send("Success");
@@ -282,9 +281,7 @@ const webHook = async (req, res) => {
   } else {
     res.status(400).send("Unknown event");
   }
-});
-
-export default router;
+};
 export {
   registerUser,
   loginUser,
@@ -296,5 +293,6 @@ export {
   bookAppointment,
   getAllAppointment,
   cancelAppointment,
-  createPayment
+  createPayment,
+  webHook
 };
