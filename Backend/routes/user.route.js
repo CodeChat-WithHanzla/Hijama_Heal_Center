@@ -10,7 +10,8 @@ import {
   bookAppointment,
   getAllAppointment,
   cancelAppointment,
-  createPayment
+  createPayment,
+  webHook
 } from "../controllers/userController.js";
 import { body } from "express-validator";
 import authUser from "../middlewares/authUser.js";
@@ -55,4 +56,5 @@ router.get("/get-appointments", authUser, getAllAppointment);
 router.post("/cancel-appointment", authUser, cancelAppointment);
 
 router.post("/payment", authUser, createPayment);
+router.post("/webhook", authUser, webHook);
 export default router;

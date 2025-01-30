@@ -269,6 +269,22 @@ const createPayment = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+const webHook = async (req, res) => {
+  const { event, data } = req.body;
+
+ 
+  if (event === "payment.success") {
+    console.log("Payment successful", data);
+    res.status(200).send("Success");
+  } else if (event === "payment.failed") {
+    console.log("Payment failed", data);
+    res.status(200).send("Failure");
+  } else {
+    res.status(400).send("Unknown event");
+  }
+});
+
+export default router;
 export {
   registerUser,
   loginUser,
