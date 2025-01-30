@@ -1,16 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { assets } from '../assets/assets_frontend/assets';
 import RelatedTherapists from '../components/RelatedTherapists';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 function Appointment() {
     const { therapistId } = useParams();
-    const { therapists, currencySymbol } = useContext(AppContext);
+    const { therapists, currencySymbol, BackendUrl, token, getAllTherapists } = useContext(AppContext);
     const [therapistInfo, setTherapistInfo] = useState(null);
     const [therapistSlots, setTherapistSlots] = useState([]);
     const [slotIndex, setSlotIndex] = useState(0);
     const [slotTime, setSlotTime] = useState('');
+    const navigate = useNavigate()
     const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
     const fetchTherapistInfo = async () => {
@@ -48,10 +51,20 @@ function Appointment() {
             while (currentDate < endTime) {
                 let formattedTime = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-                // Filter out slots where the current time has passed
-                if (new Date() < currentDate) {
-                    timeSlots.push({ datetime: new Date(currentDate), time: formattedTime });
+                let day = currentDate.getDate()
+                let month = currentDate.getMonth() + 1
+                let year = currentDate.getFullYear()
+                const slotDate = day + "_" + month + "_" + year
+                const slotTime = formattedTime
+                const isSlotAvailable = therapistInfo.slots_booked[slotDate] && therapistInfo.slots_booked[slotDate].includes(slotTime) ? false : true
+                if (isSlotAvailable) {
+                    // Filter out slots where the current time has passed
+                    if (new Date() < currentDate) {
+                        timeSlots.push({ datetime: new Date(currentDate), time: formattedTime });
+                    }
                 }
+
+
 
                 currentDate.setMinutes(currentDate.getMinutes() + 30); // Increment by 30 minutes
             }
@@ -62,6 +75,42 @@ function Appointment() {
         }
     };
 
+    const bookAppointment = async () => {
+        if (!token) {
+            toast.warning('Please login to book an appointment');
+            return navigate('/login');
+        }
+        try {
+            const date = therapistSlots[slotIndex][0].datetime;
+            let day = date.getDate()
+            let month = date.getMonth() + 1
+            let year = date.getFullYear()
+            const slotDate = day + '_' + month + '_' + year
+
+            const { status, data } = await axios.post(`${BackendUrl}/user/book-appointment`, {
+                therapistId,
+                slotDate,
+                slotTime,
+
+            }, { headers: { Authorization: `Bearer ${token}` } })
+            if (status == 201) {
+                toast.success(data.msg)
+                getAllTherapists()
+                navigate('/my-appointments')
+            }
+            else {
+                toast.error(data.msg)
+            }
+
+        } catch (error) {
+            if (error.response && error.response.data) {
+                const errorMessage = error.response.data.error || error.response.data.msg;
+                toast.error(errorMessage);
+            } else {
+                toast.error(error.message);
+            }
+        }
+    }
     useEffect(() => {
         fetchTherapistInfo();
     }, [therapists, therapistId]);
@@ -139,7 +188,7 @@ function Appointment() {
                         ))
                     }
                 </div>
-                <button className="bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6">
+                <button onClick={bookAppointment} className="bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6">
                     Book an appointment
                 </button>
 

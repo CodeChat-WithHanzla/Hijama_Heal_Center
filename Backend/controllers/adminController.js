@@ -23,7 +23,6 @@ export const addTherapist = async (req, res) => {
       !speciality,
       !experience,
       !about,
-      !available,
       !fees,
       !address)
     ) {
@@ -46,12 +45,12 @@ export const addTherapist = async (req, res) => {
       degree,
       experience,
       about,
-      available,
       fees,
       address: JSON.parse(address),
       date: Date.now(),
     };
     if (image) therapistData.image = imageUrl;
+    if (available) therapistData.available = available;
     const newTherapist = await therapistModel.create(therapistData);
     res.status(201).json({ message: "Therapist added", newTherapist });
   } catch (error) {
@@ -75,5 +74,17 @@ export const loginAdmin = async (req, res) => {
   } catch (error) {
     console.log(error.message);
     res.status(400).json({ message: error.message });
+  }
+};
+export const allTherapists = async (req, res) => {
+  try {
+    const therapists = await therapistModel.find().select("-password");
+    res.status(200).json({ therapists });
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        message: `An error occurred while fetching therapists. ${error.message}`,
+      });
   }
 };

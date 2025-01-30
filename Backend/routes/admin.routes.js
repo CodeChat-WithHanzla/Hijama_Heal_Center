@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { addTherapist, loginAdmin } from "../controllers/adminController.js";
+import {
+  addTherapist,
+  allTherapists,
+  loginAdmin,
+} from "../controllers/adminController.js";
+import { changeAvailability } from "../controllers/therapistController.js";
 import { body } from "express-validator";
 import authAdmin from "../middlewares/authAdmin.js";
 
@@ -24,4 +29,6 @@ adminRouter.post(
   addTherapist
 );
 adminRouter.post("/login", loginAdmin);
+adminRouter.get("/all-therapist", authAdmin, allTherapists);
+adminRouter.put("/changeAvailability", authAdmin, changeAvailability);
 export default adminRouter;

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from "axios";
 import { useNavigate } from "react-router-dom"
+import { AppContext } from '../context/AppContext';
 function Login() {
     const [state, setState] = useState('Sign Up');
     const [email, setEmail] = useState('');
@@ -11,6 +12,7 @@ function Login() {
     const [otp, setOtp] = useState('');
     const [popup, setPopup] = useState({ show: false, message: '', isSuccess: false });
     const navigate = useNavigate()
+    const { setToken } = useContext(AppContext)
     const showPopup = (message, isSuccess) => {
         setPopup({ show: true, message, isSuccess });
         setTimeout(() => setPopup({ show: false, message: '', isSuccess: false }), 3000);
@@ -21,7 +23,7 @@ function Login() {
 
         try {
             if (state === 'Sign Up') {
-                await axios.post(`${import.meta.env.VITE_BASE_URL}/auth/register`, {
+                await axios.post(`${import.meta.env.VITE_BASE_URL}/user/register`, {
                     name,
                     email,
                     phone,
@@ -29,10 +31,12 @@ function Login() {
                 })
                 setOtpState(true);
             } else {
-                await axios.post(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
+                const { data } = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/login`, {
                     email,
                     password
                 })
+                localStorage.setItem('AccessToken', data.accessToken)
+                setToken(data.accessToken);
                 navigate('/')
             }
         } catch (error) {
@@ -43,7 +47,7 @@ function Login() {
     const onVerifyOtpHandler = async (event) => {
         event.preventDefault();
         try {
-            await axios.post(`${import.meta.env.VITE_BASE_URL}/auth/verifyEmail`, {
+            await axios.post(`${import.meta.env.VITE_BASE_URL}/user/verifyEmail`, {
                 email,
                 otp
             })
