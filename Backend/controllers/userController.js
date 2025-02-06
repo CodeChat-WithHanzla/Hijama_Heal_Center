@@ -1,4 +1,3 @@
-import axios from "axios";
 import userModel from "../models/user.model.js";
 import { validationResult } from "express-validator";
 import {
@@ -65,7 +64,6 @@ const registerUser = async (req, res) => {
       .json({ msg: `Error during registration. ${error.message}` });
   }
 };
-
 const loginUser = async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -110,7 +108,6 @@ const loginUser = async (req, res) => {
     });
   }
 };
-
 const logoutUser = async (req, res) => {
   try {
     if (!req.cookies?.AccessToken && !req.cookies?.RefreshToken) {
@@ -204,7 +201,7 @@ const bookAppointment = async (req, res) => {
     await newAppointment.save();
 
     await therapistModel.findByIdAndUpdate(therapistId, { slots_booked });
-    res.status(201).json({ msg: "Appointment Booked" });
+    res.status(201).json({ newAppointment, msg: "Appointment Booked" });
   } catch (error) {
     res.status(400).json({ msg: `Something went wrong` });
   }
@@ -243,45 +240,6 @@ const cancelAppointment = async (req, res) => {
     res.status(400).json({ msg: `Something went wrong` });
   }
 };
-const createPayment = async (req, res) => {
-  console.log(process.env.SAFEPAY_SECRET_KEY);
-
-  try {
-    const { token, amount, currency } = req.body;
-
-    const response = await axios.post(
-      "https://api.safepay.com/v1/charges",
-      {
-        token: token,
-        amount: amount,
-        currency: currency || "PKR"
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.SAFEPAY_SECRET_KEY}`,
-          "Content-Type": "application/json"
-        }
-      }
-    );
-
-    res.status(200).json({ success: true, data: response.data });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-};
-const webHook = async (req, res) => {
-  const { event, data } = req.body;
-
-  if (event === "payment.success") {
-    console.log("Payment successful", data);
-    res.status(200).send("Success");
-  } else if (event === "payment.failed") {
-    console.log("Payment failed", data);
-    res.status(200).send("Failure");
-  } else {
-    res.status(400).send("Unknown event");
-  }
-};
 export {
   registerUser,
   loginUser,
@@ -292,7 +250,5 @@ export {
   updateProfile,
   bookAppointment,
   getAllAppointment,
-  cancelAppointment,
-  createPayment,
-  webHook
+  cancelAppointment
 };
