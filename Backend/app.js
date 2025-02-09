@@ -20,12 +20,12 @@ app.use(
       }
       return callback(new Error("Not allowed by CORS"));
     },
-    credentials: true,
+    credentials: true
   })
 );
 
 // Routes
 app.use("/user", userRouter);
 app.use("/admin", upload.single("image"), adminRouter);
-app.use("/list", therapistRouter);
+app.use("/therapists", therapistRouter);
 export default app;

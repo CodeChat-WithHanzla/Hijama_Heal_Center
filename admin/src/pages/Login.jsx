@@ -3,10 +3,12 @@ import { assets } from "../assets/assets_admin/assets"
 import { AdminContext } from '../context/AdminContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { TherapistContext } from '../context/TherapistContext'
 
 function Login() {
     const [state, setState] = useState('Admin')
     const { setAToken, BackendUrl } = useContext(AdminContext)
+    const { setTherapistToken } = useContext(TherapistContext)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const submitHandler = async (e) => {
@@ -18,11 +20,21 @@ function Login() {
                     localStorage.setItem('aToken', res.data.token)
                     setAToken(res.data.token)
                 }
-                
+
 
             }
             else {
+                const { status, data } = await axios.post(`${BackendUrl}/therapists/login`, { email, password })
+                if (status === 200) {
+                    localStorage.setItem("therapistToken", data.token)
+                    setTherapistToken(data.token)
+                    localStorage.removeItem("aToken");
+                    console.log(data.token);
 
+                }
+                else {
+                    toast.error(data.message)
+                }
             }
         } catch (error) {
             toast.error(error.message)

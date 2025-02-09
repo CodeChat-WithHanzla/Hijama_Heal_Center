@@ -9,7 +9,7 @@ const AppContextProvider = ({ children }) => {
     const BackendUrl = import.meta.env.VITE_BASE_URL;
     const getAllTherapists = async () => {
         try {
-            const { data, status } = await axios.get(`${BackendUrl}/list/allTherapists`)
+            const { data, status } = await axios.get(`${BackendUrl}/therapists/allTherapists`)
             if (status === 200)
                 setTherapists(data.therapists)
             else {
