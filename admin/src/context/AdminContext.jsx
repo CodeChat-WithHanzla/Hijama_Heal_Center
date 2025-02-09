@@ -5,6 +5,9 @@ export const AdminContext = createContext()
 const AdminContextProvider = ({ children }) => {
     const [aToken, setAToken] = useState(localStorage.getItem('aToken') || '')
     const [therapists, setTherapists] = useState([])
+    const [appointments, setAppointments] = useState([])
+    const [dashboardData, setDashboardData] = useState([])
+
     const BackendUrl = import.meta.env.VITE_BACKEND_URL
     const getAllTherapists = async () => {
         try {
@@ -37,8 +40,48 @@ const AdminContextProvider = ({ children }) => {
             toast.error(error.response?.data?.message || "Failed to update availability");
         }
     }
+    const getAllAppointments = async () => {
+        try {
+            const { status, data } = await axios.get(`${BackendUrl}/admin/all-appointments`, { headers: { token: aToken } })
+            if (status === 200) {
+                setAppointments(data.appointments)
+                console.log(data.appointments);
+
+            }
+            else
+                toast.error("Failed to fetch appointments")
+        } catch (error) {
+            toast.error("Failed to fetch appointments")
+        }
+    }
+    const cancelAppointment = async (appointmentId) => {
+        try {
+            const { status, data } = await axios.put(`${BackendUrl}/admin/cancel-appointments`, { appointmentId }, { headers: { token: aToken } })
+            if (status === 200) {
+                toast.success(data.msg)
+                getAllAppointments()
+            }
+            else
+                toast.error(data.msg)
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
+    const getDashboardData = async () => {
+        try {
+            const { status, data } = await axios.get(`${BackendUrl}/admin/dashboard`, { headers: { token: aToken } })
+            if (status === 200) {
+                setDashboardData(data.dashBoardData)
+                console.log(data.dashBoardData);
+            }
+            else
+                toast.error("Failed to fetch dashboard data")
+        } catch (error) {
+            toast.error("Failed to fetch dashboard data")
+        }
+    }
     const value = {
-        aToken, setAToken, BackendUrl, getAllTherapists, therapists, changeAvailability
+        aToken, setAToken, BackendUrl, getAllTherapists, therapists, changeAvailability, appointments, setAppointments, getAllAppointments, cancelAppointment, dashboardData, getDashboardData
     }
     return (
         <AdminContext.Provider value={value}>

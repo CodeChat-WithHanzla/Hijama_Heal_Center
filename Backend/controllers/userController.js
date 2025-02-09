@@ -8,6 +8,7 @@ import {
 import { v2 as cloudinary } from "cloudinary";
 import therapistModel from "../models/therapist.model.js";
 import appointmentmodel from "../models/appointment.model.js";
+
 const generateAccessAndRefreshToken = async (userId) => {
   try {
     const user = await userModel.findById(userId);

@@ -9,7 +9,7 @@ import {
   updateProfile,
   bookAppointment,
   getAllAppointment,
-  cancelAppointment,
+  cancelAppointment
 } from "../controllers/userController.js";
 import { body } from "express-validator";
 import authUser from "../middlewares/authUser.js";

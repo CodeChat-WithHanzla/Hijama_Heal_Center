@@ -3,6 +3,9 @@ import {
   addTherapist,
   allTherapists,
   loginAdmin,
+  allAppointments,
+  cancelAppointment,
+  adminDashboard
 } from "../controllers/adminController.js";
 import { changeAvailability } from "../controllers/therapistController.js";
 import { body } from "express-validator";
@@ -23,7 +26,7 @@ adminRouter.post(
       .matches(/^(03[0-9]{9}|(0[1-9][0-9]{1,2})[0-9]{7})$/)
       .withMessage(
         "Please enter a valid Pakistani phone number (e.g., 03123456789 or 0421234567)"
-      ),
+      )
   ],
   authAdmin,
   addTherapist
@@ -31,4 +34,7 @@ adminRouter.post(
 adminRouter.post("/login", loginAdmin);
 adminRouter.get("/all-therapist", authAdmin, allTherapists);
 adminRouter.put("/changeAvailability", authAdmin, changeAvailability);
+adminRouter.get("/all-appointments", authAdmin, allAppointments);
+adminRouter.put("/cancel-appointments", authAdmin, cancelAppointment);
+adminRouter.get("/dashboard", authAdmin, adminDashboard);
 export default adminRouter;
