@@ -37,7 +37,7 @@ export const loginTherapists = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password)
       return res.status(400).json({ message: "Email and Password required." });
-    const therapist = await therapistModel.findOne({ email });
+    const therapist = await therapistModel.findOne({ email }).select("+password");
     if (!therapist)
       return res.status(404).json({ message: "Therapist not found" });
     const isMatch = await therapist.isPasswordCorrect(password);
@@ -106,6 +106,74 @@ export const appointmentCancel = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: `An error occurred while cancelling the appointment. ${error.message}`
+    });
+  }
+};
+export const therapistDashboard = async (req, res) => {
+  try {
+    const { therapistId } = req.body;
+    const appointments = await appointmentModel.find({ therapistId });
+    if (!appointments) {
+      return res.status(404).json({ message: "Appointment not found" });
+    }
+    let earnings = 0;
+    appointments.map((item) => {
+      if (item.isCompleted || item.payment) earnings += item.amount;
+    });
+    let patients = [];
+    appointments.map((item) => {
+      if (!patients.includes[item.userId]) patients.push(item.userId);
+    });
+    const dashBoardData = {
+      earnings,
+      appointments: appointments.length,
+      patients: patients.length,
+      latestAppointments: appointments.reverse().slice(0, 5)
+    };
+    res.status(200).json({ dashBoardData });
+  } catch (error) {
+    res.status(500).json({
+      message: `An error occurred while getting data for Dashboard. ${error.message}`
+    });
+  }
+};
+export const therapistProfile = async (req, res) => {
+  try {
+    const { therapistId } = req.body;
+    const profileData = await therapistModel.findById(therapistId);
+    if (!profileData) {
+      return res.status(404).json({ message: "Therapist not found" });
+    }
+    res.status(200).json({ profileData });
+  } catch (error) {
+    res.status(500).json({
+      message: `An error occurred while getting data for Profile. ${error.message}`
+    });
+  }
+};
+export const updateTherapistProfile = async (req, res) => {
+  try {
+    const { therapistId, ...updateData } = req.body;
+    if (!Object.keys(updateData).length) {
+      return res.status(204).send();
+    }
+    const updatedTherapist = await therapistModel.findByIdAndUpdate(
+      therapistId,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedTherapist) {
+      return res.status(404).json({ message: "Therapist not found." });
+    }
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      updatedTherapist
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: `Failed to update the therapist profile. ${error.message}`
     });
   }
 };

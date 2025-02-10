@@ -3,7 +3,10 @@ import {
   loginTherapists,
   therapistAppointments,
   appointmentComplete,
-  appointmentCancel
+  appointmentCancel,
+  therapistDashboard,
+  therapistProfile,
+  updateTherapistProfile
 } from "../controllers/therapistController.js";
 import authTherapist from "../middlewares/authTherapist.js";
 import { Router } from "express";
@@ -13,4 +16,7 @@ router.post("/login", loginTherapists);
 router.get("/appointments", authTherapist, therapistAppointments);
 router.put("/complete-appointment", authTherapist, appointmentComplete);
 router.put("/cancel-appointment", authTherapist, appointmentCancel);
+router.get("/dashboard", authTherapist, therapistDashboard);
+router.get("/profile", authTherapist, therapistProfile);
+router.put("/update-profile", authTherapist, updateTherapistProfile);
 export default router;

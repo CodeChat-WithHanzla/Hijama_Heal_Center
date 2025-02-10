@@ -1,8 +1,10 @@
 import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../../context/AdminContext'
+import { AppContext } from '../../context/AppContext'
 import { assets } from "../../assets/assets_admin/assets"
 function Dashboard() {
     const { aToken, dashboardData, getDashboardData, cancelAppointment } = useContext(AdminContext)
+    const { slotDateFormat } = useContext(AppContext)
     useEffect(() => {
         if (aToken) {
             getDashboardData()
@@ -46,7 +48,7 @@ function Dashboard() {
                                 <img className='rounded-full w-10' src={item.therapistData.image} alt="" />
                                 <div className="flex-1 text-sm">
                                     <p className='text-gray-800 font-medium'>{item.therapistData.name}</p>
-                                    <p className='text-gray-600'>{item.slotDate}</p>
+                                    <p className='text-gray-600'>{slotDateFormat(item.slotDate)}</p>
                                 </div>
                                 {
                                     item.cancelled ? <p className='text-red-400 text-xs font-medium'>Cancelled</p> : <img onClick={() => cancelAppointment(item._id)} className='w-10 cursor-pointer' src={assets.cancel_icon} alt="" />

@@ -5,7 +5,7 @@ const therapistSchema = new Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String, required: true, select: false },
     image: {
       type: String,
       default:
@@ -32,7 +32,7 @@ therapistSchema.methods.isPasswordCorrect = function (password) {
 therapistSchema.methods.generateToken = function () {
   return jwt.sign(
     {
-      _id: this._id,
+      _id: this._id
     },
     process.env.ACCESS_PRIVATE_KEY,
     {
