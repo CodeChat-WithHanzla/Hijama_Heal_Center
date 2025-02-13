@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { TherapistContext } from "../../context/TherapistContext"
 import { AppContext } from "../../context/AppContext"
+import { useNavigate } from 'react-router'
 function TherapistProfile() {
     const [isEdit, setIsEdit] = useState(false)
     const { therapistToken, profileData, getProfileData, setProfileData, updateProfile } = useContext(TherapistContext)
     const { currencySymbol } = useContext(AppContext)
+    const navigate = useNavigate()
     const handleClick = async () => {
         if (isEdit) {
             await updateProfile(profileData);
@@ -14,6 +16,8 @@ function TherapistProfile() {
     useEffect(() => {
         if (therapistToken)
             getProfileData()
+        else
+            navigate('/')
     }, [therapistToken])
     return profileData && (
         <div>
@@ -54,7 +58,7 @@ function TherapistProfile() {
                         </p>
                     </div>
                     <div className="flex gap-1 pt-2 items-center">
-                         
+
                         <input name='checkbox' className='w-5 h-5 outline-blue-600 rounded' onChange={() => isEdit && setProfileData(prev => ({ ...prev, available: !prev.available }))} checked={profileData.available} type="checkbox" />
                         <label htmlFor="checkbox">Available</label>
                     </div>

@@ -2,12 +2,16 @@ import React, { useContext, useEffect } from 'react'
 import { TherapistContext } from '../../context/TherapistContext'
 import { AppContext } from "../../context/AppContext"
 import { assets } from "../../assets/assets_admin/assets"
+import { useNavigate } from 'react-router'
 function TherapistDashboard() {
     const { therapistToken, dashBoardData, getDashBoardData, appointmentCancel, appointmentComplete } = useContext(TherapistContext)
     const { currencySymbol, slotDateFormat } = useContext(AppContext)
+    const navigate = useNavigate()
     useEffect(() => {
         if (therapistToken)
             getDashBoardData()
+        else
+            navigate('/')
     }, [therapistToken])
     return dashBoardData && (
         <div className='m-5'>

@@ -2,12 +2,17 @@ import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../../context/AdminContext'
 import { AppContext } from '../../context/AppContext'
 import { assets } from "../../assets/assets_admin/assets"
+import { useNavigate } from 'react-router';
 function Dashboard() {
     const { aToken, dashboardData, getDashboardData, cancelAppointment } = useContext(AdminContext)
     const { slotDateFormat } = useContext(AppContext)
+    const navigate = useNavigate();
     useEffect(() => {
         if (aToken) {
             getDashboardData()
+        }
+        else {
+            navigate('/');
         }
     }, [aToken])
     return dashboardData && (

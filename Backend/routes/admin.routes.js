@@ -5,7 +5,8 @@ import {
   loginAdmin,
   allAppointments,
   cancelAppointment,
-  adminDashboard
+  adminDashboard,
+  getFeedbacks
 } from "../controllers/adminController.js";
 import { changeAvailability } from "../controllers/therapistController.js";
 import { body } from "express-validator";
@@ -37,4 +38,7 @@ adminRouter.put("/changeAvailability", authAdmin, changeAvailability);
 adminRouter.get("/all-appointments", authAdmin, allAppointments);
 adminRouter.put("/cancel-appointments", authAdmin, cancelAppointment);
 adminRouter.get("/dashboard", authAdmin, adminDashboard);
+
+
+adminRouter.get("/feedback", authAdmin, getFeedbacks);
 export default adminRouter;

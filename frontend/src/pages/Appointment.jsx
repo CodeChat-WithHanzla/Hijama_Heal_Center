@@ -5,6 +5,7 @@ import { assets } from '../assets/assets_frontend/assets';
 import RelatedTherapists from '../components/RelatedTherapists';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import ServiceReview from "../components/ServiceReview"
 
 function Appointment() {
     const { therapistId } = useParams();
@@ -15,7 +16,7 @@ function Appointment() {
     const [slotTime, setSlotTime] = useState('');
     const navigate = useNavigate()
     const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-
+    const [isOpen, setIsOpen] = useState(false);
     const fetchTherapistInfo = async () => {
         const therapistInfo = therapists.find(therapist => therapist._id === therapistId);
         setTherapistInfo(therapistInfo);
@@ -96,7 +97,7 @@ function Appointment() {
             if (status == 201) {
                 toast.success(data.msg)
                 getAllTherapists()
-                navigate('/my-appointments')
+                setIsOpen(true)
             }
             else {
                 toast.error(data.msg)
@@ -141,7 +142,7 @@ function Appointment() {
                         <p>{therapistInfo.degree} - {therapistInfo.speciality}</p>
                         <button className="py-0.5 px-2 border text-xs rounded-full">{therapistInfo.experience}</button>
                     </div>
-
+                    <ServiceReview isOpen={isOpen} setIsOpen={setIsOpen} />
                     <div>
                         <p className="flex items-center gap-1 text-sm font-medium text-gray-900 mt-3">
                             About <img src={assets.info_icon} alt="" />

@@ -7,7 +7,7 @@ const AdminContextProvider = ({ children }) => {
     const [therapists, setTherapists] = useState([])
     const [appointments, setAppointments] = useState([])
     const [dashboardData, setDashboardData] = useState([])
-
+    const [feedback, setFeedback] = useState([])
     const BackendUrl = import.meta.env.VITE_BACKEND_URL
     const getAllTherapists = async () => {
         try {
@@ -80,8 +80,24 @@ const AdminContextProvider = ({ children }) => {
             toast.error("Failed to fetch dashboard data")
         }
     }
+    const getAllFeedback = async () => {
+        try {
+            const { data, status } = await axios.get(`${BackendUrl}/admin/feedback`, { headers: { token: aToken } })
+            if (status === 200) {
+                console.log(data);
+                setFeedback(data)
+            }
+            else {
+                toast.error("Failed to get feedback. Please try again later.");
+                console.log(data.message);
+            }
+        } catch (error) {
+            toast.error("Failed to get feedback. Please try again later.");
+            console.log(error.message)
+        }
+    }
     const value = {
-        aToken, setAToken, BackendUrl, getAllTherapists, therapists, changeAvailability, appointments, setAppointments, getAllAppointments, cancelAppointment, dashboardData, getDashboardData
+        aToken, setAToken, BackendUrl, getAllTherapists, therapists, changeAvailability, appointments, setAppointments, getAllAppointments, cancelAppointment, dashboardData, getDashboardData, feedback, getAllFeedback
     }
     return (
         <AdminContext.Provider value={value}>

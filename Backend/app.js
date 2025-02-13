@@ -7,6 +7,7 @@ import userRouter from "./routes/user.route.js";
 import adminRouter from "./routes/admin.routes.js";
 import upload from "./middlewares/multer.js";
 import therapistRouter from "./routes/therapist.routes.js";
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

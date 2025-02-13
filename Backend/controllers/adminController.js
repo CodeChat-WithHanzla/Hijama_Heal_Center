@@ -3,6 +3,7 @@ import { v2 as cloudinary } from "cloudinary";
 import jwt from "jsonwebtoken";
 import appointmentmodel from "../models/appointment.model.js";
 import userModel from "../models/user.model.js";
+import Feedback from "../models/feedBack.model.js";
 
 export const addTherapist = async (req, res) => {
   try {
@@ -135,5 +136,16 @@ export const adminDashboard = async (req, res) => {
     res.status(200).json({ dashBoardData });
   } catch (error) {
     res.status(400).json({ msg: `Something went wrong` });
+  }
+};
+// get the feedbacks
+export const getFeedbacks = async (req, res) => {
+  try {
+    const feedbacks = await Feedback.find()
+      .populate("user", "name email image")
+      .sort({ createdAt: -1 });
+    res.status(200).json(feedbacks);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };

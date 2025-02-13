@@ -14,6 +14,7 @@ import { TherapistContext } from './context/TherapistContext';
 import TherapistDashboard from './pages/therapist/TherapistDashboard';
 import TherapistAppointments from "./pages/therapist/TherapistAppointments"
 import TherapistProfile from "./pages/therapist/TherapistProfile"
+import Feedback from './pages/admin/Feedback';
 function App() {
   const { aToken } = useContext(AdminContext)
   const { therapistToken } = useContext(TherapistContext)
@@ -30,6 +31,7 @@ function App() {
           <Route path='/all-appointments' element={<AllAppointments />} />
           <Route path='/add-therapist' element={<AddTherapist />} />
           <Route path='/therapist-list' element={<TherapistList />} />
+          <Route path='/feedback' element={<Feedback />} />
           {/* Therapist Routes */}
           <Route path='/therapist-dashboard' element={<TherapistDashboard />} />
           <Route path='/therapist-appointments' element={< TherapistAppointments />} />

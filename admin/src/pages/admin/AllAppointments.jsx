@@ -2,12 +2,17 @@ import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../../context/AdminContext'
 import { AppContext } from '../../context/AppContext'
 import { assets } from "../../assets/assets_admin/assets"
+import { useNavigate } from 'react-router';
 function AllAppointments() {
     const { aToken, appointments, getAllAppointments, cancelAppointment } = useContext(AdminContext)
     const { calculateAge, slotDateFormat, currencySymbol } = useContext(AppContext)
+    const navigate = useNavigate();
     useEffect(() => {
         if (aToken)
             getAllAppointments()
+        else {
+            navigate('/');
+        }
 
     }, [aToken])
     return (

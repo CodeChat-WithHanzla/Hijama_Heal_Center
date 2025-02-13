@@ -13,10 +13,12 @@ const AppContextProvider = ({ children }) => {
             if (status === 200)
                 setTherapists(data.therapists)
             else {
-                toast.error('Failed to fetch therapists')
+                toast.error('Failed to fetch therapists, Please Check your internet connection')
             }
         } catch (error) {
-            toast.error(error.message)
+            toast.error('Failed to fetch therapists, Please Check your internet connection')
+            console.log(error.message);
+
         }
     }
     const [token, setToken] = useState(localStorage.getItem('AccessToken'));
@@ -34,6 +36,21 @@ const AppContextProvider = ({ children }) => {
             toast.error(error.message)
         }
     }
+    const submitFeedback = async ({ feedback, rating, satisfaction }) => {
+        try {
+            const { data, status } = await axios.post(`${BackendUrl}/user/feedback`, { feedback, rating, satisfaction }, { headers: { Authorization: `Bearer ${token}` } })
+            if (status === 201) {
+                toast.success(data.message)
+            }
+            else {
+                console.log(data.message);
+                toast.error("Submission failed. Please try again.")
+            }
+        } catch (error) {
+            console.log(error.message);
+            toast.error("Submission failed. Please try again.")
+        }
+    }
     const currencySymbol = '₨'
     const value = {
         BackendUrl,
@@ -44,7 +61,8 @@ const AppContextProvider = ({ children }) => {
         setUserData,
         loadUserData,
         token,
-        setToken
+        setToken,
+        submitFeedback
     }
     useEffect(() => {
 

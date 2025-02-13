@@ -15,8 +15,16 @@ const AppContextProvider = ({ children }) => {
         const dateArray = slotDate.split("_")
         return dateArray[0] + " " + months[Number(dateArray[1]) - 1] + " " + dateArray[2]
     }
+    const slotDateFormatIso = (isoDate) => {
+        const date = new Date(isoDate);
+        const day = date.getDate();
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+
+        return `${day} ${month} ${year}`;
+    };
     const currencySymbol = '₨'
-    const value = { calculateAge, slotDateFormat, currencySymbol }
+    const value = { calculateAge, slotDateFormat, currencySymbol, slotDateFormatIso }
     return (
         <AppContext.Provider value={value}>
             {

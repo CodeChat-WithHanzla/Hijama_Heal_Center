@@ -2,12 +2,16 @@ import React, { useContext, useEffect } from 'react'
 import { TherapistContext } from "../../context/TherapistContext"
 import { AppContext } from '../../context/AppContext'
 import { assets } from "../../assets/assets_admin/assets"
+import { useNavigate } from 'react-router'
 function TherapistAppointments() {
     const { therapistToken, appointments, getAppointments, appointmentComplete, appointmentCancel } = useContext(TherapistContext)
     const { calculateAge, slotDateFormat, currencySymbol } = useContext(AppContext)
+    const navigate = useNavigate()
     useEffect(() => {
         if (therapistToken)
             getAppointments()
+        else
+            navigate('/')
     }, [therapistToken])
     return (
         <div className='w-full max-w-6xl m-5'>

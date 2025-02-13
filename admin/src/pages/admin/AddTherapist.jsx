@@ -16,7 +16,6 @@ function AddTherapist() {
     const [therapistAddress1, setTherapistAddress1] = useState('')
     const [therapistAddress2, setTherapistAddress2] = useState('')
     const { aToken, BackendUrl } = useContext(AdminContext)
-
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {

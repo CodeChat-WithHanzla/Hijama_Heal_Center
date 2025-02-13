@@ -8,7 +8,7 @@ import {
 import { v2 as cloudinary } from "cloudinary";
 import therapistModel from "../models/therapist.model.js";
 import appointmentmodel from "../models/appointment.model.js";
-
+import feedbackModel from "../models/feedBack.model.js";
 const generateAccessAndRefreshToken = async (userId) => {
   try {
     const user = await userModel.findById(userId);
@@ -241,6 +241,24 @@ const cancelAppointment = async (req, res) => {
     res.status(400).json({ msg: `Something went wrong` });
   }
 };
+const submitFeedback = async (req, res) => {
+  const { feedback, rating, satisfaction, userId } = req.body;
+  if (!feedback || !rating || !satisfaction) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
+  try {
+    const newFeedback = new feedbackModel({
+      feedback,
+      rating,
+      satisfaction,
+      user: userId
+    });
+    await newFeedback.save();
+    res.status(201).json({ message: "Thank you for your feedback!" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 export {
   registerUser,
   loginUser,
@@ -251,5 +269,6 @@ export {
   updateProfile,
   bookAppointment,
   getAllAppointment,
-  cancelAppointment
+  cancelAppointment,
+  submitFeedback
 };
