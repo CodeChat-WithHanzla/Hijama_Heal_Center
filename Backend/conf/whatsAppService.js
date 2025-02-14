@@ -1,20 +1,38 @@
 import dotenv from "dotenv";
 dotenv.config();
-import twilio from "twilio";
-const accountSid = process.env.TWILIO_Account_SID;
-const authToken = process.env.TWILIO_AUTH;
-const client = twilio(accountSid, authToken);
+
+const WHATSAPP_API_URL = "https://graph.facebook.com/v17.0";
+const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
+const ACCESS_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
+
 const createMessage = async (phone, notification) => {
   try {
-    const message = await client.messages.create({
-      body: notification,
-      from: "whatsapp:+14155238886",
-      to: `whatsapp:${phone}`,
-    });
+    const response = await fetch(
+      `${WHATSAPP_API_URL}/${PHONE_NUMBER_ID}/messages`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${ACCESS_TOKEN}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          to: phone,
+          type: "text",
+          text: { body: notification }
+        })
+      }
+    );
 
-    console.log(message.body);
+    const data = await response.json();
+
+    if (data.error) {
+      console.error(`Error: ${data.error.message}`);
+    } else {
+      console.log(`Message sent successfully: ${JSON.stringify(data)}`);
+    }
   } catch (error) {
-    console.log(`Error: ${error.message}`);
+    console.error(`Error: ${error.message}`);
   }
 };
 

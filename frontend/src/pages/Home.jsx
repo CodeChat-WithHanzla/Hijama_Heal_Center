@@ -1,6 +1,6 @@
 import React from 'react'
 import Header from '../components/Header'
-import SpecialityMenu from '../components/specialityMenu'
+import SpecialityMenu from '../components/SpecialityMenu'
 import TopTherapists from '../components/TopTherapists'
 import Banner from '../components/Banner'
 
