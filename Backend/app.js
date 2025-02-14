@@ -12,7 +12,11 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-const allowedOrigins = [process.env.FRONTEND_URL, process.env.FRONTEND_URL2];
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  process.env.FRONTEND_URL2,
+  process.env.HOSTED_URL_FRONTEND
+];
 app.use(
   cors({
     origin: (origin, callback) => {
