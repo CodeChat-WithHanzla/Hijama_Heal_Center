@@ -12,11 +12,11 @@ import {
   cancelAppointment,
   submitFeedback
 } from "../controllers/userController.js";
+import sendNotification from "../conf/sendNotification.js";
 import { body } from "express-validator";
 import authUser from "../middlewares/authUser.js";
 import upload from "../middlewares/multer.js";
 const router = Router();
-
 router.post(
   "/register",
   [
@@ -53,6 +53,6 @@ router.put("/update-user", upload.single("image"), authUser, updateProfile);
 router.post("/book-appointment", authUser, bookAppointment);
 router.get("/get-appointments", authUser, getAllAppointment);
 router.post("/cancel-appointment", authUser, cancelAppointment);
-
 router.post("/feedback", authUser, submitFeedback);
+router.post("/send-notification", sendNotification);
 export default router;
