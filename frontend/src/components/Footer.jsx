@@ -24,7 +24,7 @@ function Footer() {
                             scrollTo(0, 0)
                         }} className='cursor-pointer'>About us</li>
                         <li onClick={() => {
-                            navigate('/conatct')
+                            navigate('/contact')
                             scrollTo(0, 0)
                         }} className='cursor-pointer'>Contact us</li>
                         <li className='cursor-pointer'>Privacy policy</li>

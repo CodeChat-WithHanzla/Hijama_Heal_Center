@@ -88,10 +88,9 @@ Key Technologies:
 - `POST /therapists/login` - Therapist login
 
 ### Appointments Management
-- `POST /appointment/bookAppointment` - Create new appointment
-- `GET /appointment/getAppointment` - Get user appointments
-- `PUT /appointment/updateAppointment` - Update appointment
-- `DELETE /appointment/cancelAppointment` - Cancel appointment
+- `POST /user/book-appointment` - Create new appointment
+- `POST /user/get-appointments` - Get user appointments
+- `POST /user/cancel-appointment` - Cancel appointment
 
 ### Therapists Management
 - `GET /therapists/appointments` - Get all Appointments
