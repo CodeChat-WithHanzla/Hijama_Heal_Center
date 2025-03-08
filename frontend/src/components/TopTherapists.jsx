@@ -1,10 +1,13 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppContext } from '../context/AppContext'
 
 function TopTherapists() {
     const navigate = useNavigate()
-    const { therapists } = useContext(AppContext)
+    const { therapists, getAllTherapists } = useContext(AppContext)
+    useEffect(() => {
+        getAllTherapists()
+    }, [])
     return (
         <div className='flex flex-col items-center gap-4 my-16 text-gray-900 md:mx-10'>
             <h1 className='text-3xl font-medium'>Top Therapists to Book</h1>
